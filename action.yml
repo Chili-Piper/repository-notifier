@@ -6,10 +6,6 @@ inputs:
     description: 'Path to the config file'
     required: true
     default: 'dispatch.yml'
-  milliseconds: # change this
-    required: true
-    description: 'input description here'
-    default: 'default value if applicable'
 runs:
   using: 'node16'
   main: 'dist/index.js'

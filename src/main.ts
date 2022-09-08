@@ -1,7 +1,9 @@
 import * as core from '@actions/core'
+import * as github from '@actions/github'
 import {wait} from './wait'
 import {promises as fs} from 'fs'
 import yaml from 'js-yaml'
+import {Config} from './model/config'
 
 async function run(): Promise<void> {
   try {
@@ -16,13 +18,13 @@ async function run(): Promise<void> {
     core.info('Loading config...')
     const configFileName = core.getInput('config-file')
     const content = await fs.readFile(`./${configFileName}`, 'utf8')
-    core.info(`configContent: 
-${content}`)
+    const doc: Config = yaml.load(content) as Config
 
-    const doc = yaml.load(content)
+    core.info(`config:`)
+    core.info(`${JSON.stringify(doc)}`)
 
-    core.info(`config: 
-${JSON.stringify(doc)}`)
+    core.info(`before: ${github.context.payload.before}`)
+    core.info(`ref: ${github.context.ref}`)
 
     core.setOutput('time', new Date().toTimeString())
   } catch (error) {
