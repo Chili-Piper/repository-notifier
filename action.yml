@@ -1,7 +1,11 @@
-name: 'Your name here'
+name: 'Repository Dispatcher'
 description: 'Provide a description here'
-author: 'Your name or organization here'
+author: 'Chili Piper'
 inputs:
+  config-file:
+    description: 'Path to the config file'
+    required: true
+    default: 'dispatch.yml'
   milliseconds: # change this
     required: true
     description: 'input description here'
