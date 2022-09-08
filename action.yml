@@ -6,6 +6,9 @@ inputs:
     description: 'Path to the config file'
     required: true
     default: 'dispatch.yml'
+  token:
+    description: 'GitHub token'
+    required: true
 runs:
   using: 'node16'
   main: 'dist/index.js'

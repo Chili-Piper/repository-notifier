@@ -44,31 +44,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const wait_1 = __nccwpck_require__(5817);
 const fs_1 = __nccwpck_require__(7147);
 const js_yaml_1 = __importDefault(__nccwpck_require__(1917));
-function getDiff() {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (github.context.payload.pull_request) {
-        }
-    });
-}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const ms = core.getInput('milliseconds');
-            core.debug(`Waiting ${ms} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-            core.debug(new Date().toTimeString());
-            yield (0, wait_1.wait)(parseInt(ms, 10));
-            core.debug(new Date().toTimeString());
             core.info('Loading config...');
             const configFileName = core.getInput('config-file');
             const content = yield fs_1.promises.readFile(`./${configFileName}`, 'utf8');
             const doc = js_yaml_1.default.load(content);
             core.info(`config:`);
             core.info(`${JSON.stringify(doc)}`);
-            core.info(`before: ${github.context.payload.before}`);
-            core.info(`ref: ${github.context.ref}`);
+            const octokit = github.getOctokit(core.getInput('token'));
+            if (github.context.eventName === 'push') {
+                const pushPayload = github.context.payload;
+                core.info(`before: ${pushPayload.before}`);
+                core.info(`after: ${pushPayload.after}`);
+                core.info(`ref: ${github.context.ref}`);
+                const compare = yield octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
+                    owner: github.context.repo.owner,
+                    repo: github.context.repo.repo,
+                    basehead: `${pushPayload.before}...${pushPayload.after}`
+                });
+                core.info(`compare:`);
+                core.info(`${JSON.stringify(compare)}`);
+            }
+            //.rest.repos.createDispatchEvent({
             core.setOutput('time', new Date().toTimeString());
         }
         catch (error) {
@@ -78,37 +79,6 @@ function run() {
     });
 }
 run();
-
-
-/***/ }),
-
-/***/ 5817:
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.wait = void 0;
-function wait(milliseconds) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return new Promise(resolve => {
-            if (isNaN(milliseconds)) {
-                throw new Error('milliseconds not a number');
-            }
-            setTimeout(() => resolve('done!'), milliseconds);
-        });
-    });
-}
-exports.wait = wait;
 
 
 /***/ }),
