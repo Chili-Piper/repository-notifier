@@ -2,8 +2,9 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import {promises as fs} from 'fs'
 import yaml from 'js-yaml'
-import {Config} from './model/config'
+import {Config} from './model/config';
 import {PushEvent} from '@octokit/webhooks-definitions/schema'
+
 
 async function run(): Promise<void> {
   try {
@@ -15,7 +16,7 @@ async function run(): Promise<void> {
     core.info(`config:`)
     core.info(`${JSON.stringify(doc)}`)
 
-    const octokit = github.getOctokit(core.getInput('token'))
+    const octokit = github.getOctokit(core.getInput('token'));
 
     if (github.context.eventName === 'push') {
       const pushPayload = github.context.payload as PushEvent
@@ -24,14 +25,11 @@ async function run(): Promise<void> {
       core.info(`after: ${pushPayload.after}`)
       core.info(`ref: ${github.context.ref}`)
 
-      const compare = await octokit.request(
-        'GET /repos/{owner}/{repo}/compare/{basehead}',
-        {
-          owner: github.context.repo.owner,
-          repo: github.context.repo.repo,
-          basehead: `${pushPayload.before}...${pushPayload.after}`
-        }
-      )
+      const compare = await octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        basehead: `${pushPayload.before}...${pushPayload.after}`
+      });
 
       core.info(`compare:`)
       core.info(`${JSON.stringify(compare)}`)
