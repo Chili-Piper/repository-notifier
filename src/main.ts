@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import {wait} from './wait'
 import {promises as fs} from 'fs'
+import yaml from 'js-yaml'
 
 async function run(): Promise<void> {
   try {
@@ -14,8 +15,14 @@ async function run(): Promise<void> {
 
     core.info('Loading config...')
     const configFileName = core.getInput('config-file')
-    const content = await fs.readFile('./' + configFileName, 'utf8')
-    core.debug('config: ' + content)
+    const content = await fs.readFile(`./${configFileName}`, 'utf8')
+    core.info(`configContent: 
+${content}`)
+
+    const doc = yaml.load(content)
+
+    core.info(`config: 
+${JSON.stringify(doc)}`)
 
     core.setOutput('time', new Date().toTimeString())
   } catch (error) {
