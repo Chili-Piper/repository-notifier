@@ -1,6 +1,6 @@
-import * as core from '@actions/core';
-import {wait} from './wait';
-import {promises as fs} from 'fs';
+import * as core from '@actions/core'
+import {wait} from './wait'
+import {promises as fs} from 'fs'
 
 async function run(): Promise<void> {
   try {
@@ -12,9 +12,10 @@ async function run(): Promise<void> {
     await wait(parseInt(ms, 10))
     core.debug(new Date().toTimeString())
 
-    const configFileName = core.getInput('config-file');
-    const content = await fs.readFile(configFileName, 'utf8');
-    core.debug(content);
+    core.info('Loading config...')
+    const configFileName = core.getInput('config-file')
+    const content = await fs.readFile(configFileName, 'utf8')
+    core.debug('config: ' + content)
 
     core.setOutput('time', new Date().toTimeString())
   } catch (error) {
