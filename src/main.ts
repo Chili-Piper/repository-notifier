@@ -14,7 +14,7 @@ async function run(): Promise<void> {
 
     core.info('Loading config...')
     const configFileName = core.getInput('config-file')
-    const content = await fs.readFile(configFileName, 'utf8')
+    const content = await fs.readFile('./' + configFileName, 'utf8')
     core.debug('config: ' + content)
 
     core.setOutput('time', new Date().toTimeString())

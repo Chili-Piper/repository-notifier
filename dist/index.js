@@ -50,10 +50,10 @@ function run() {
             core.debug(new Date().toTimeString());
             yield (0, wait_1.wait)(parseInt(ms, 10));
             core.debug(new Date().toTimeString());
-            core.info("Loading config...");
+            core.info('Loading config...');
             const configFileName = core.getInput('config-file');
-            const content = yield fs_1.promises.readFile(configFileName, 'utf8');
-            core.debug("config: " + content);
+            const content = yield fs_1.promises.readFile('./' + configFileName, 'utf8');
+            core.debug('config: ' + content);
             core.setOutput('time', new Date().toTimeString());
         }
         catch (error) {
