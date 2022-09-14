@@ -9,6 +9,7 @@ import {Api} from '@octokit/plugin-rest-endpoint-methods/dist-types/types'
 import {Octokit} from '@octokit/core'
 import {ContentMatchResult, MatchResult} from './model/match-result'
 import {handleMatchResultNotifications} from './notify'
+import {handleImNotifications} from './imNotifications'
 
 function getMatchPattern(rule: Rule, config: Config): string | undefined {
   return rule.contentMatchRegex
@@ -17,7 +18,9 @@ function getMatchPattern(rule: Rule, config: Config): string | undefined {
 }
 
 function getGroupNames(rule: Rule, config: Config) {
-  return rule.groupNames ? rule.groupNames : config.defaultGroupNames
+  return rule.regexGroupNames
+    ? rule.regexGroupNames
+    : config.defaultRegexGroupNames
 }
 
 async function checkMatches(
@@ -128,6 +131,7 @@ async function run(): Promise<void> {
     core.info(`matched rules: ${JSON.stringify(matchResults)}`)
 
     await handleMatchResultNotifications(config, matchResults)
+    await handleImNotifications(config, matchResults)
 
     core.setOutput('time', new Date().toTimeString())
   } catch (error) {
