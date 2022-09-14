@@ -1,0 +1,11 @@
+defaultContentMatchPattern: "\\+\\s*newTag:\\s*(\\d*.\\d*.\\d*)-(\\w*).*#.*$"
+defaultRegexGroupNames:
+  - version
+  - environment
+rules:
+  - path: clusters/test/test1
+    repository: test-action
+mappers:
+  - name: environment
+    from: qa
+    to: testing

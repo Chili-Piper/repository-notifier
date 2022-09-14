@@ -59,6 +59,7 @@ function handleImNotifications(config, matchResults) {
         }
         const promises = matchResults.map((value) => __awaiter(this, void 0, void 0, function* () {
             if (value.rule.imNotifier && value.rule.imNotifier === slackNotifier.name) {
+                core.debug(`Sending slack notification... Path: ${value.rule.path}. ${JSON.stringify(value.result)}`);
                 yield axios_1.default.post(slackUrl, {
                     text: `Version update: ${value.rule.path}. ${JSON.stringify(value.result)}`
                 });

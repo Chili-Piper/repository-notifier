@@ -22,6 +22,11 @@ export async function handleImNotifications(
 
   const promises = matchResults.map(async value => {
     if (value.rule.imNotifier && value.rule.imNotifier === slackNotifier.name) {
+      core.debug(
+        `Sending slack notification... Path: ${
+          value.rule.path
+        }. ${JSON.stringify(value.result)}`
+      )
       await axios.post(slackUrl, {
         text: `Version update: ${value.rule.path}. ${JSON.stringify(
           value.result
