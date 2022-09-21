@@ -22,7 +22,7 @@ export async function handleImNotifications(
 
   const promises = matchResults.map(async value => {
     if (value.rule.imNotifier && value.rule.imNotifier === slackNotifier.name) {
-      core.debug(
+      core.info(
         `Sending slack notification... Path: ${
           value.rule.path
         }. ${JSON.stringify(value.result)}`
